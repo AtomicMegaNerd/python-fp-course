@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "python-fp-course"
+version = "0.1.0"
+description = "Pluralsight course on Functional Programming"
+authors = ["Chris Dunphy <chris@megaparsec.ca>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "fp"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "==0.0.239"
+mypy = "==1.0.0"
+black = "==23.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
