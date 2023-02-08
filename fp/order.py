@@ -1,28 +1,27 @@
-from typing import Optional
+"""
+This is where the magic happens
+"""
+from dataclasses import dataclass
 from fp.customer import Customer
+from fp.order_item import OrderItem
 
 
+@dataclass(frozen=True)
 class Order:
-    # class attribute
-    orders: list = []
+    """
+    This is our order class.
+    """
 
     # instance attributes
-    orderid: int = 0
-    shipping_address: str = ""
-    expedited: bool = False
-    shipped: bool = False
-    customer: Optional[Customer] = None
+    orderid: int
+    shipping_address: str
+    expedited: bool
+    shipped: bool
+    customer: Customer
     order_items: list
 
-    def __init__(
-        self, orderid, shipping_address, expedited, shipped, customer, order_items
-    ) -> None:
-        self.orderid = orderid
-        self.shipping_address = shipping_address
-        self.expedited = expedited
-        self.shipped = shipped
-        self.customer = customer
-        self.order_items = order_items
+    # class attribute
+    orders: tuple = ()
 
     @staticmethod
     def test_expedited(order):
@@ -88,5 +87,28 @@ class Order:
         Order.get_filtered_info(
             lambda o: any(i.notify_backordered for i in o.order_items),
             lambda o: o.customer.notify(o.customer, msg),
+            orders,
+        )
+
+    @staticmethod
+    def mark_backordered(orders, orderid, itemnumber):
+        return Order.map(
+            lambda o: o
+            if o.orderid != orderid
+            else (
+                Order(
+                    o.orderid,
+                    o.shipping_address,
+                    o.expedited,
+                    o.shipped,
+                    o.customer,
+                    Order.map(
+                        lambda i: i
+                        if i.itemnumber != itemnumber
+                        else OrderItem(i.name, i.itemnumber, i.quantity, i.price, True),
+                        o.order_items,
+                    ),
+                )
+            ),
             orders,
         )
