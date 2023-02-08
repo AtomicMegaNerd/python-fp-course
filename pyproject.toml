@@ -18,3 +18,11 @@ black = "==23.1.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[virtualenvs]
+in-project = true
+
+[tool.mypy]
+files = "fp"
+mypy_path = "fp"
+strict = true
